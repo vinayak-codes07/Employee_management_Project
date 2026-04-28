@@ -1,0 +1,263 @@
+<%-- header.jspf : included at top of every page --%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Salary Management</title>
+<style>
+  /* ── Google Font ──────────────────────────────── */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  /* ── Reset ────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Palette ──────────────────────────────────── */
+  :root {
+    --primary:   #2563eb;
+    --primary-d: #1d4ed8;
+    --success:   #16a34a;
+    --danger:    #dc2626;
+    --warning:   #d97706;
+    --bg:        #f1f5f9;
+    --card:      #ffffff;
+    --border:    #e2e8f0;
+    --text:      #1e293b;
+    --muted:     #64748b;
+    --sidebar:   #1e293b;
+    --sidebar-h: #2563eb;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Top Bar ──────────────────────────────────── */
+  .topbar {
+    background: linear-gradient(135deg, #1e293b 0%, #2563eb 100%);
+    color: #fff;
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  }
+  .topbar .logo { font-size: 1.3rem; font-weight: 700; letter-spacing: -.5px; }
+  .topbar .logo span { color: #93c5fd; }
+  .topbar .subtitle { font-size: .8rem; color: #94a3b8; margin-left: auto; }
+
+  /* ── Layout ───────────────────────────────────── */
+  .layout { display: flex; flex: 1; }
+
+  /* ── Sidebar ──────────────────────────────────── */
+  .sidebar {
+    width: 240px;
+    background: var(--sidebar);
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar .nav-section {
+    padding: .5rem 1.2rem .3rem;
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+  .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .7rem 1.5rem;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 500;
+    transition: background .15s, color .15s;
+    border-left: 3px solid transparent;
+  }
+  .sidebar a:hover, .sidebar a.active {
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    border-left-color: var(--primary);
+  }
+  .sidebar a .icon { font-size: 1.1rem; width: 20px; text-align: center; }
+
+  /* ── Main content ─────────────────────────────── */
+  .main { flex: 1; padding: 2rem; overflow-x: auto; }
+
+  /* ── Card ─────────────────────────────────────── */
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding-bottom: .75rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .card-title .icon { color: var(--primary); font-size: 1.3rem; }
+
+  /* ── Form elements ────────────────────────────── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .form-group { display: flex; flex-direction: column; gap: .4rem; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: .82rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  input, select, textarea {
+    padding: .65rem .9rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: .93rem;
+    font-family: inherit;
+    color: var(--text);
+    background: #f8fafc;
+    transition: border-color .2s, box-shadow .2s;
+    outline: none;
+  }
+  input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,.12); background: #fff; }
+  input.error { border-color: var(--danger); }
+
+  /* ── Buttons ──────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .65rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: .9rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-d); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.3); }
+  .btn-danger  { background: var(--danger);  color: #fff; }
+  .btn-danger:hover  { background: #b91c1c; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(220,38,38,.3); }
+  .btn-success { background: var(--success); color: #fff; }
+  .btn-success:hover { background: #15803d; }
+  .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary); color: #fff; }
+  .btn-sm { padding: .35rem .8rem; font-size: .8rem; }
+
+  /* ── Alerts ───────────────────────────────────── */
+  .alert {
+    padding: .9rem 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-weight: 500;
+    font-size: .9rem;
+  }
+  .alert-success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+  .alert-danger  { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+  .alert-icon { font-size: 1.2rem; }
+
+  /* ── Table ────────────────────────────────────── */
+  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  thead { background: linear-gradient(135deg, #1e293b, #2563eb); color: #fff; }
+  thead th { padding: .85rem 1rem; text-align: left; font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .5px; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f0f7ff; }
+  tbody td { padding: .8rem 1rem; color: var(--text); }
+  .badge {
+    display: inline-block;
+    padding: .2rem .65rem;
+    border-radius: 99px;
+    font-size: .75rem;
+    font-weight: 600;
+  }
+  .badge-male   { background: #dbeafe; color: #1d4ed8; }
+  .badge-female { background: #fce7f3; color: #9d174d; }
+  .badge-other  { background: #f3e8ff; color: #6b21a8; }
+
+  /* ── Stats strip ──────────────────────────────── */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--card); border-radius: 12px; padding: 1.2rem 1.5rem; border: 1px solid var(--border); display: flex; flex-direction: column; gap: .3rem; }
+  .stat-card .stat-label { font-size: .75rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+  .stat-card .stat-val   { font-size: 1.6rem; font-weight: 700; color: var(--primary); }
+
+  /* ── Breadcrumb ───────────────────────────────── */
+  .breadcrumb { font-size: .82rem; color: var(--muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: .4rem; }
+  .breadcrumb a { color: var(--primary); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  /* ── Footer ───────────────────────────────────── */
+  footer { text-align: center; font-size: .78rem; color: var(--muted); padding: 1rem; border-top: 1px solid var(--border); }
+
+  /* ── Validation tooltip ──────────────────────── */
+  .field-error { font-size: .78rem; color: var(--danger); margin-top: .2rem; }
+
+  /* ── Search bar ───────────────────────────────── */
+  .search-bar { display: flex; gap: .75rem; align-items: center; margin-bottom: 1.2rem; }
+  .search-bar input { flex: 1; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">&#128188; Employee<span>MS</span></div>
+  <div class="subtitle">Employee Salary Management System &nbsp;|&nbsp; JDBC + MySQL</div>
+</div>
+
+<div class="layout">
+<nav class="sidebar">
+  <div class="nav-section">Main</div>
+  <a href="index.jsp" class="${pageContext.request.servletPath == '/index.jsp' ? 'active' : ''}">
+    <span class="icon">🏠</span> Dashboard
+  </a>
+
+  <div class="nav-section">Modules</div>
+  <a href="empadd.jsp" class="${pageContext.request.servletPath == '/empadd.jsp' ? 'active' : ''}">
+    <span class="icon">➕</span> Add Employee
+  </a>
+  <a href="DisplayEmployeeServlet" class="${pageContext.request.servletPath == '/empdisplay.jsp' ? 'active' : ''}">
+    <span class="icon">👁️</span> View Employees
+  </a>
+  <a href="empupdate.jsp" class="${pageContext.request.servletPath == '/empupdate.jsp' ? 'active' : ''}">
+    <span class="icon">✏️</span> Update Employee
+  </a>
+  <a href="empdelete.jsp" class="${pageContext.request.servletPath == '/empdelete.jsp' ? 'active' : ''}">
+    <span class="icon">🗑️</span> Delete Employee
+  </a>
+
+  <div class="nav-section">Reports</div>
+  <a href="ReportServlet" class="${pageContext.request.servletPath == '/report_form.jsp' ? 'active' : ''}">
+    <span class="icon">📊</span> Generate Reports
+  </a>
+</nav>
+<div class="main">
